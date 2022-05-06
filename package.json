@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^16.2.4",
+    "commitlint": "^16.2.4",
+    "husky": "^7.0.4"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
