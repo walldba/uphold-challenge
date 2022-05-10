@@ -16,6 +16,12 @@ To install all packages use the command:
 yarn install
 ```
 
+To run unit tests:
+
+```bash
+yarn test
+```
+
 To run the development server use:
 
 This command will create a container for the app and another container for the postgres and will run typeorm migration

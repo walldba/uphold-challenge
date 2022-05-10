@@ -1,17 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getArrayNotifications } from '../../utils/notificationMock';
 import { NotificatorService } from '../services/notificator.service';
 import { NotificatorController } from './notificator.controller';
 
-const notifications = [
-  {
-    id: 38,
-    currencyPair: 'BRL-USD',
-    rate: '0.1948300178',
-    oscillation: '0.00020905090000000737',
-    percentage: '0.0001',
-    createdAt: '2022-05-10T12:58:56.000Z',
-  },
-];
+const notifications = getArrayNotifications();
 
 describe('NotificatorController', () => {
   let controller: NotificatorController;
@@ -39,6 +31,7 @@ describe('NotificatorController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   it('should get notifications', async () => {

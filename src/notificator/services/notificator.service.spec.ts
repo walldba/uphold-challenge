@@ -5,44 +5,11 @@ import { UpholdService } from '../../uphold/services/uphold.service';
 import { NotificatorService } from './notificator.service';
 import { Notification } from '../entities/notification.entity';
 import { ConfigService } from '@nestjs/config';
+import * as notificationMock from '../../utils/notificationMock';
 
-const response = {
-  data: {
-    ask: '31655.1349275216',
-    bid: '31527.3038236307',
-    currency: 'USD',
-  },
-  status: 200,
-  statusText: 'OK',
-};
+const notificationArray = notificationMock.getArrayNotifications();
 
-const notificationArray = [
-  new Notification({
-    currencyPair: 'a',
-    oscillation: 0,
-    percentage: 0,
-    rate: 0,
-  }),
-  new Notification({
-    currencyPair: 'b',
-    oscillation: 0,
-    percentage: 0,
-    rate: 0,
-  }),
-  new Notification({
-    currencyPair: 'c',
-    oscillation: 0,
-    percentage: 0,
-    rate: 0,
-  }),
-];
-
-const notification = new Notification({
-  currencyPair: 'c',
-  oscillation: 0,
-  percentage: 0,
-  rate: 0,
-});
+const notification = notificationMock.getNotification();
 
 const notificationConfig = {
   listenInterval: 5000,

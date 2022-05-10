@@ -4,6 +4,7 @@ import { UpholdService } from './uphold.service';
 import { AxiosResponse } from 'axios';
 import { ICurrencyResponse } from '../interfaces/uphold.currency.response';
 import { of } from 'rxjs';
+import * as currencyMock from '../../utils/currencyMock';
 
 describe('UpholdService', () => {
   let service: UpholdService;
@@ -35,11 +36,8 @@ describe('UpholdService', () => {
   });
 
   it('should return exchange rate of a currency relative to any other currency', async () => {
-    const data = {
-      ask: '31655.1349275216',
-      bid: '31527.3038236307',
-      currency: 'USD',
-    };
+    const data = currencyMock.getCurrency();
+    const getCurrencyPairMock = currencyMock.getCurrencyPair();
 
     const response: AxiosResponse<ICurrencyResponse, any> = {
       data,
@@ -51,17 +49,13 @@ describe('UpholdService', () => {
 
     jest.spyOn(httpService, 'get').mockReturnValue(
       of({
-        data: {
-          ask: '31655.1349275216',
-          bid: '31527.3038236307',
-          currency: 'USD',
-        },
+        data,
         status: 200,
         statusText: 'OK',
       } as any),
     );
 
-    service.getTicketCurrency('BTC-USD').then((res) => {
+    service.getTicketCurrency(getCurrencyPairMock).then((res) => {
       expect(res.data).toEqual(response.data);
       expect(res.status).toEqual(response.status);
       expect(res.statusText).toEqual(response.statusText);
