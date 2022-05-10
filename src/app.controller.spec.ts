@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { isDate, isNumberObject } from 'util/types';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -15,8 +16,9 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "Uptime!"', async () => {
+      const status = await appController.getStatus();
+      expect(status.name).toContain('uphold-challenge');
     });
   });
 });

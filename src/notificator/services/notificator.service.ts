@@ -35,7 +35,7 @@ export class NotificatorService implements INotificatorService, OnModuleInit {
     });
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.logger.log(`Starting currency pooling`);
     this.startPooling();
   }
@@ -58,39 +58,39 @@ export class NotificatorService implements INotificatorService, OnModuleInit {
 
       if (!this.initialRate[currencyPair]) {
         this.initialRate[currencyPair] = Number(response.data.bid);
+      }
+
+      if (response.status != HttpStatus.OK) {
+        this.logger.log(`Failed to get Uphold Ticket Currency`, {
+          status: response.status,
+          statusText: response.statusText,
+          data: response.data,
+        });
       } else {
-        if (response.status != HttpStatus.OK) {
-          this.logger.log(`Failed to get Uphold Ticket Currency`, {
-            status: response.status,
-            statusText: response.statusText,
-            data: response.data,
+        const { hadOscillation, oscillation, percentage } =
+          Notification.checkOscillationValue({
+            percentageValue: this.notificatorConfig.percentage,
+            firstRate: this.initialRate[currencyPair],
+            newRate: Number(response.data.bid),
           });
-        } else {
-          const { hadOscillation, oscillation, percentage } =
-            Notification.checkOscillationValue({
-              percentageValue: this.notificatorConfig.percentage,
-              firstRate: this.initialRate[currencyPair],
-              newRate: Number(response.data.bid),
-            });
 
-          if (hadOscillation) {
-            this.logger.log(
-              `There was an oscillation in the currency pair: ${currencyPair}`,
-              {
-                initialRate: this.initialRate[currencyPair],
-                currentRate: response.data.bid,
-                oscillation,
-                percentage,
-              },
-            );
-
-            await this.notificationRepository.insert({
-              currencyPair,
-              percentage,
+        if (hadOscillation) {
+          this.logger.log(
+            `There was an oscillation in the currency pair: ${currencyPair}`,
+            {
+              initialRate: this.initialRate[currencyPair],
+              currentRate: response.data.bid,
               oscillation,
-              rate: +response.data.bid,
-            });
-          }
+              percentage,
+            },
+          );
+
+          await this.notificationRepository.insert({
+            currencyPair,
+            percentage,
+            oscillation,
+            rate: +response.data.bid,
+          });
         }
       }
     } catch (error) {

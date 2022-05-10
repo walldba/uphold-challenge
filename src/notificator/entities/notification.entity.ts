@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { INotification } from '../interfaces/notificator.entity.interface';
 
 @Entity({ name: 'notifications' })
-export class Notification {
+export class Notification implements INotification {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,6 +20,10 @@ export class Notification {
 
   @Column({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP(0)' })
   createdAt: Date;
+
+  constructor(data: INotification) {
+    Object.assign(this, data);
+  }
 
   static checkOscillationValue({
     percentageValue,
