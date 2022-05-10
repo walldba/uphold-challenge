@@ -1,73 +1,81 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Uphold Assessment Challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This app is a bot to send notifications when having currency oscillations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Index
 
-## Description
+- [Usage](#usage)
+- [Technologies](#technologies)
+- [Acceptance criteria](#acceptance-criteria)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Usage
 
-## Installation
+To install all packages use the command:
 
 ```bash
-$ npm install
+yarn install
 ```
 
-## Running the app
+To run the development server use:
+
+This command will create a container for the app and another container for the postgres and will run typeorm migration
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose up -d
 ```
 
-## Test
+To see notification logs use:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker logs uphold_challenge --tail 50 -f
 ```
 
-## Support
+This app run on port 3000.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+To check the app health:
 
-## Stay in touch
+```bash
+curl --location --request GET 'http://localhost:3000/api/'
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+To find all notifications:
 
-## License
+```bash
+curl --location --request GET 'http://localhost:3000/api/notificator/find'
+```
 
-Nest is [MIT licensed](LICENSE).
+To find notifications by Currency Pair:
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/notificator/findByCurrencyPair?currencyPair=EUR-USD'
+```
+
+## Technologies
+
+- [NestJS](https://nestjs.com/)
+- [Postgres](https://www.postgresql.org/)
+- [TypeORM](https://typeorm.io/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) protocol to better organize my commits. I also used [Husky](https://github.com/typicode/husky) to add pre-commit lints and checks.
+
+## Acceptance criteria
+
+[x] **PHASE 1 (Mandatory):**
+
+- You must create a README.md file in your project root explaining how we can run the bot. Make sure to include all the necessary set up and execution, and avoid implicit prerequisites.
+
+- You must connect to Uphold public ticker and retrieve the BTC-USD rate every 5 seconds. Each time you retrieve a new rate, the bot must compare it with the first one and decide if it should alert of an oscillation. For the purpose of this exercise we want to be alerted (a simple log if sufficient) if the price changes 0.01 percent in either direction (price goes up or down).
+
+[x] **PHASE 2 (Optional):**
+
+- Handle multiple currency pairs at the same time.
+
+- Accept all the parameters (currency pairs, fetch interval, price oscillation percentage, etc.) as arguments.
+
+- Create a test suite for your code (e.g. jest or mocha).
+
+[x] **PHASE 3 (Bonus):**
+
+- Dockerize your application.
+
+- Create a database to store all the alerts generated (e.g. Postgres).
+  Persist all the information that you consider relevant (e.g. timestamps, rate, bot configuration at the time of the alert, etc.)
