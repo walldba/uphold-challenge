@@ -1,9 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom } from 'rxjs';
-import { UpholdConfig } from '../../config/uphold.config';
 import { ICurrencyResponse } from '../interfaces/uphold.currency.response';
 import { IUpholdService } from '../interfaces/uphold.service.interface';
 
